@@ -17,14 +17,13 @@ export default function Navbar() {
   const publicLinks = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
-    { name: "Blog", href: "/blog" },
+    { name: "All Blog Posts", href: "/blog" },
     { name: "Contact", href: "/contact" },
-    { name: "Shop", href: "/products" },
   ];
 
   return (
     // Outer container: Fixed width, centered, sticky, rounded, shadow
-    <nav className="w-11/12 mx-auto mt-5 sticky top-5 z-50 rounded-xl px-4 py-3 bg-white shadow-lg border border-gray-100 transition duration-300">
+    <nav className="sticky top-0 z-50 p-5 bg-white shadow-lg border border-gray-100 transition duration-300">
       <div className="flex justify-between items-center h-full">
 
         {/* 1. Navbar Start (Logo and Mobile Menu) */}
@@ -53,8 +52,8 @@ export default function Navbar() {
           </button>
 
           {/* Logo/Brand Name */}
-          <Link href="/" className="text-2xl font-extrabold text-indigo-600 ml-4">
-            MyShop
+          <Link href="/" className="text-2xl font-extrabold text-blue-500 ml-4">
+            Community Blog
           </Link>
         </div>
 
@@ -63,7 +62,7 @@ export default function Navbar() {
           <ul className="flex space-x-8 text-lg font-medium">
             {publicLinks.map((link) => (
               <li key={link.name}>
-                <Link href={link.href} className="text-gray-700 hover:text-indigo-600 transition">
+                <Link href={link.href} className="text-gray-700 hover:text-blue-500 transition">
                   {link.name}
                 </Link>
               </li>
@@ -108,8 +107,8 @@ export default function Navbar() {
                         </Link>
                       </li>
                       <li>
-                        <Link href="/admin/products/add" className="block px-4 py-2 text-sm text-indigo-600 hover:bg-gray-100 rounded-md">
-                          Add Product
+                        <Link href="/admin/blog/add" className="block px-4 py-2 text-sm text-indigo-600 hover:bg-gray-100 rounded-md">
+                          Write New Post
                         </Link>
                       </li>
                     </>
@@ -129,7 +128,7 @@ export default function Navbar() {
             // Login Button
             <Link
               href="/login"
-              className="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition shadow-md"
+              className="px-4 py-2 text-sm font-semibold text-white bg-blue-400 rounded-lg hover:bg-blue-500 transition shadow-md"
             >
               Login
             </Link>

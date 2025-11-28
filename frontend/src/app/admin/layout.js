@@ -51,11 +51,6 @@ export default function AdminLayout({ children }) {
                 </Link>
               </li>
               <li>
-                <Link href="/admin/products/add" className="block p-2 rounded hover:bg-gray-700 transition">
-                  Add Product 📦
-                </Link>
-              </li>
-              <li>
                 <Link href="/admin/blog/add" className="block p-2 rounded hover:bg-gray-700 transition">
                   Add Blog Post ✍️
                 </Link>

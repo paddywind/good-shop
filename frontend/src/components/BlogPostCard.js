@@ -11,7 +11,7 @@ export default function BlogPostCard({ post }) {
   });
 
   return (
-    <div className="border rounded-lg shadow-md overflow-hidden transition hover:shadow-xl bg-white">
+    <div className="border rounded-md shadow-md overflow-hidden transition hover:shadow-xl dark:bg-white">
       <div className="relative w-full h-52">
         <Image
           src={imageUrl}

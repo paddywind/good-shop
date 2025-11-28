@@ -5,9 +5,9 @@ export default function Footer() {
     <footer className="bg-gray-800 text-white mt-10">
       <div className="w-11/12 mx-auto py-8 grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
-          <h1 className="text-2xl font-bold mb-4">MyShop</h1>
+          <h1 className="text-2xl font-bold mb-4">Community Blog</h1>
           <p className="text-gray-300">
-            Crafting beautiful, responsive web experiences.
+            Crafting beautiful and informative blogs.
           </p>
         </div>
 
@@ -42,12 +42,12 @@ export default function Footer() {
           <ul className="space-y-2">
             <li>
               <Link href="#" className="hover:text-blue-400">
-                Add Product
+                Feature a Blog
               </Link>
             </li>
             <li>
               <Link href="#" className="hover:text-blue-400">
-                Manage Products
+                Promote Your Content
               </Link>
             </li>
             <li>
@@ -83,7 +83,7 @@ export default function Footer() {
       </div>
 
       <div className="text-center py-4 border-t border-gray-700 text-gray-400">
-        &copy; {new Date().getFullYear()} MyShop. All rights reserved.
+        &copy; {new Date().getFullYear()} Community Blog. All rights reserved.
       </div>
     </footer>
   );

@@ -2,16 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function AdminTopBar() {
   const pathname = usePathname();
 
   const links = [
-    { href: "/admin", label: "Dashboard" },
-    // { href: "/admin/blog", label: "Blogs" },
-    { href: "#", label: "Users" },
-    { href: "#", label: "Settings" },
+    { href: "/admin", label: "Manage posts" },
+    { href: "/admin/blog/add", label: "Add new post" },
   ];
+
+  const { logout } = useAuth();
 
   return (
     <div
@@ -25,9 +26,11 @@ export default function AdminTopBar() {
         Admin
       </h1>
 
-      <div className="flex gap-3 overflow-x-auto hide-scrollbar">
+      <div className="flex gap-3 overflow-x-auto hide-scrollbar items-center">
         {links.map((link) => {
-          const active = pathname.startsWith(link.href);
+          // make `/admin` match exactly, but allow child routes for nested links
+          const active =
+            link.href === "/admin" ? pathname === "/admin" : pathname.startsWith(link.href);
 
           return (
             <Link
@@ -45,6 +48,15 @@ export default function AdminTopBar() {
             </Link>
           );
         })}
+        <button
+          type="button"
+          onClick={logout}
+          className={
+            "px-3 py-2 rounded-lg text-sm whitespace-nowrap transition text-red-600 dark:text-red-400 border border-gray-200 dark:border-gray-700 hover:bg-red-50 dark:hover:bg-red-800"
+          }
+        >
+          Logout
+        </button>
       </div>
     </div>
   );

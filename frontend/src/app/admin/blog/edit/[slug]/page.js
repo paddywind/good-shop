@@ -83,8 +83,10 @@ export default function EditBlogPostPage({ params }) {
       }));
 
       if (updated.slug && updated.slug !== slug) {
+        // Redirect to new slug if it changed
         router.push(`/admin/blog/edit/${updated.slug}`);
       } else {
+        // Redirect to admin index after update
         setTimeout(() => router.push('/admin'), 1500);
       }
     } catch (err) {
@@ -105,25 +107,18 @@ export default function EditBlogPostPage({ params }) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">
-        Edit Blog Post
-      </h1>
+    <div className="mx-auto lg:ml-5">
+      <h1 className="text-3xl font-bold mb-6 text-gray-900">Edit Blog Post</h1>
 
-      {error && (
-        <div className="bg-red-50 text-red-700 border border-red-200 p-4 rounded mb-6">
-          {error}
-        </div>
-      )}
+      {/* Kept error display consistent with Add page */}
+      {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-4">{error}</p>}
 
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-8 rounded-xl shadow-sm"
-      >
-        {/* CURRENT IMAGE */}
+      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
+
+        {/* CURRENT IMAGE - Using mb-6 like the Add page's main sections */}
         {formData.currentImageUrl && (
           <div className="mb-6">
-            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+            <label className="block text-gray-700 font-medium mb-2">
               Current Image
             </label>
             <div className="w-full">
@@ -132,75 +127,74 @@ export default function EditBlogPostPage({ params }) {
                 alt="Current featured"
                 width={700}
                 height={400}
-                className="rounded-lg object-cover border border-gray-200 dark:border-gray-700"
+                // Simplified border styling for consistency
+                className="rounded-lg object-cover border border-gray-300"
               />
             </div>
           </div>
         )}
 
-        {/* NEW IMAGE */}
+        {/* REPLACE IMAGE INPUT - Styled to match the file input in the Add page */}
         <div className="mb-6">
-          <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+          <label htmlFor="featuredImage" className="block text-gray-700 font-medium">
             Replace Image (optional)
           </label>
           <input
             type="file"
+            id="featuredImage"
             name="featuredImage"
             onChange={handleChange}
-            className="block w-full text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-gray-700 rounded-lg p-2 bg-white dark:bg-gray-800"
+            className="text-gray-900 w-full p-2 border border-gray-300 rounded mt-1 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
           />
         </div>
 
-        {/* TITLE */}
-        <div className="mb-6">
-          <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-            Title
-          </label>
+        {/* TITLE Input - Consistent styling */}
+        <div className="mb-4">
+          <label htmlFor="title" className="block text-gray-700 font-medium">Title</label>
           <input
             type="text"
+            id="title"
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+            className="w-full p-2 border border-gray-300 rounded mt-1 text-gray-900"
             required
           />
         </div>
 
-        {/* AUTHOR */}
-        <div className="mb-6">
-          <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-            Author
-          </label>
+        {/* AUTHOR Input - Consistent styling */}
+        <div className="mb-4">
+          <label htmlFor="author" className="block text-gray-700 font-medium">Author</label>
           <input
             type="text"
+            id="author"
             name="author"
             value={formData.author}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+            className="w-full p-2 border border-gray-300 rounded mt-1 text-gray-900"
             required
           />
         </div>
 
-        {/* CONTENT */}
-        <div className="mb-6">
-          <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-            Content
-          </label>
+        {/* CONTENT Textarea - Consistent styling */}
+        <div className="mb-6"> {/* Use mb-6 for the last element before the button, consistent with Add page */}
+          <label htmlFor="content" className="block text-gray-700 font-medium">Content</label>
           <textarea
+            id="content"
             name="content"
             value={formData.content}
             onChange={handleChange}
-            rows={12}
-            className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 leading-relaxed"
+            rows="10" // Reduced rows from 12 to 10 for consistency
+            className="w-full p-2 border border-gray-300 rounded mt-1 text-gray-900"
             required
           />
         </div>
 
-        {/* SUBMIT */}
+        {/* Submit Button - Consistent styling but kept 'Update Post' text */}
         <button
           type="submit"
           disabled={submitting}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition disabled:bg-gray-400"
+          className="w-full bg-green-600 text-white p-3 rounded font-semibold hover:bg-green-700 transition disabled:bg-gray-400"
         >
           {submitting ? 'Updating...' : 'Update Post'}
         </button>

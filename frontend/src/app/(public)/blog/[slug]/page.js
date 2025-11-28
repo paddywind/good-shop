@@ -26,7 +26,7 @@ export default async function BlogPostDetailPage({ params }) {
 
 
   return (
-    <main className="container mx-auto p-8 max-w-4xl bg-white shadow-lg rounded-xl mt-10">
+    <main className="container mx-auto p-8 max-w-4xl bg-white shadow-lg rounded-xl my-10">
       <div className="mb-8">
         <h2 className="text-5xl font-extrabold mb-4 text-gray-900 leading-tight">{title}</h2>
       </div>

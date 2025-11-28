@@ -9,7 +9,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL; // <--- IMPORTANT: Match your 
  */
 export async function fetchPublicData(endpoint) {
   try {
-    const response = await fetch(`${BASE_URL}/${endpoint}`);
+    const response = await fetch(`${BASE_URL}${endpoint}`);
     if (!response.ok) {
       // Throw an error if the response status is 4xx or 5xx
       throw new Error(`HTTP error! Status: ${response.status}`);

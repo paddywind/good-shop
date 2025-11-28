@@ -17,7 +17,7 @@ export async function fetchProtectedData(endpoint, method = 'GET', bodyData = nu
     throw new Error('Authentication token not found. Please log in.');
   }
 
-  const url = `${BASE_URL}/${endpoint}`;
+  const url = `${BASE_URL}${endpoint}`;
   const isFileBased = bodyData instanceof FormData;
 
   const headers = {

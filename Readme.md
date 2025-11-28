@@ -4,14 +4,14 @@ A simple full‑stack blog demo with a Node/Express backend and a Next.js fronte
 
 ## Repository layout
 
-- `backend/` — Express API, MongoDB models, Cloudinary integration, and auth middleware.
-- `frontend/` — Next.js (app router) frontend with pages/components and client API helpers.
+- `backend/` — Express API, MongoDB models, middleware for auth and image upload(Cloudinary)
+- `frontend/` — Next.js (app router) frontend with pages, components and client API helpers.
 
 Key backend files:
 
 - `backend/server.js` — main server entry.
-- `backend/src/models/` — Mongoose models (`User`, `Product`, `BlogPost`).
-- `backend/src/routes/` — API routes (`authRoutes.js`, `productRoutes.js`, `blogRoutes.js`).
+- `backend/src/models/` — Mongoose models (`User`, `BlogPost`).
+- `backend/src/routes/` — API routes (`authRoutes.js`, `blogRoutes.js`).
 - `backend/.env.example` — example environment variables required by the backend.
 
 Key frontend files:
@@ -25,8 +25,8 @@ Key frontend files:
 
 - Node.js (recommend v18 or later)
 - npm (bundled with Node) or yarn
-- MongoDB database (Atlas or local)
-- A Cloudinary account if you want to use image uploads
+- MongoDB database (Atlas)
+- A Cloudinary account for image uploads
 
 ## Environment variables
 
@@ -41,7 +41,7 @@ MONGO_URI=mongodb+srv://<user>:<password>@your-cluster.mongodb.net/<dbname>
 Frontend: `frontend/.env` currently contains:
 
 ```
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
+NEXT_PUBLIC_API_URL=http://localhost:5000
 ```
 
 Adjust `NEXT_PUBLIC_API_URL` to point to your running backend API.
@@ -78,22 +78,7 @@ The frontend runs on `http://localhost:3000` by default. It uses `NEXT_PUBLIC_AP
 
 ## Build and run (production)
 
-Backend: ensure `backend/.env` is set, then:
-
-```bash
-cd backend
-npm install --production
-npm start
-```
-
-Frontend: build and start Next.js:
-
-```bash
-cd frontend
-npm install
-npm run build
-npm run start
-```
+Import project repo to vercel and deploy the frontend and backend separately using the required environment variables.
 
 ## Common tasks & tips
 
@@ -106,12 +91,3 @@ npm run start
 - Authentication logic: `backend/src/middleware/authMiddleware.js` and `backend/src/routes/authRoutes.js`.
 - Cloudinary uploads: `backend/src/middleware/cloudinaryMiddleware.js` and usage in routes.
 - Client API usage: `frontend/src/lib/api.js` and `frontend/src/lib/secureApi.js`.
-
-## Next steps (optional)
-
-- Add a process manager (pm2) for production backend deployment.
-- Containerize the app with Docker for easier deployment.
-
----
-
-If you want, I can also add a `contributing` section, Dockerfiles, or a single npm workspace script to start both services together.

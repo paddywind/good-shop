@@ -1,8 +1,9 @@
 // /frontend/app/(public)/login/page.js
-'use client';
+"use client";
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../../../context/AuthContext';
 
 export default function LoginPage() {
@@ -11,6 +12,16 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const { login } = useAuth();
 
+  const { isAuthenticated, isLoading, isAdmin } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (isAuthenticated) {
+      router.replace(isAdmin ? '/admin' : '/');
+    }
+  }, [isLoading, isAuthenticated, isAdmin, router]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -18,6 +29,8 @@ export default function LoginPage() {
     const success = await login(email, password);
     if (!success) setError('Invalid email or password.');
   };
+
+  if (isLoading || isAuthenticated) return null;
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-neutral-900 px-4">

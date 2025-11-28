@@ -146,7 +146,7 @@ export default function Navbar() {
                 setMobileOpen((v) => !v);
                 setMenuOpen(false);
               }}
-              className="lg:hidden p-2 rounded-md hover:bg-gray-100 transition"
+              className="lg:hidden p-2 rounded-md hover:bg-gray-100 transition text-black"
             >
               <svg
                 className="w-6 h-6"

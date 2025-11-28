@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
   //register function
   const register = async (email, password) => {
     try {
-      const response = await fetch(`${BASE_URL}/api/admin-register`, {
+      const response = await fetch(`${BASE_URL}/api/auth/admin-register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

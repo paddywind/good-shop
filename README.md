@@ -82,7 +82,6 @@ Import project repo to vercel and deploy the frontend and backend separately usi
 
 ## Common tasks & tips
 
-- If you see CORS errors, verify backend CORS config and that `NEXT_PUBLIC_API_URL` matches the backend URL.
 - If uploads fail, confirm `CLOUDINARY_URL` is set and valid.
 - Check backend logs for MongoDB connection errors; ensure `MONGO_URI` is reachable.
 

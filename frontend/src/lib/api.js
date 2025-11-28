@@ -1,6 +1,6 @@
 // /frontend/lib/api.js
 
-const BASE_URL = 'http://localhost:5000/api'; // <--- IMPORTANT: Match your backend server address
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL; // <--- IMPORTANT: Match your backend server address
 
 /**
  * Fetches data from a public API endpoint.

@@ -1,6 +1,6 @@
 // /frontend/lib/secureApi.js
 
-const BASE_URL = 'http://localhost:5000/api'; // Match your backend server address
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL; // Match your backend server address
 
 /**
  * Fetches data or sends mutations to a protected API endpoint.

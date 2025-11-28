@@ -18,9 +18,7 @@ const storage = new CloudinaryStorage({
     // Determine the folder based on the route or file type
     // We assume 'productImage' for shop and 'featuredImage' for blog
     let folder;
-    if (file.fieldname === 'productImage') {
-      folder = 'shop_products';
-    } else if (file.fieldname === 'featuredImage') {
+    if (file.fieldname === 'featuredImage') {
       folder = 'blog_posts';
     } else {
       folder = 'misc';

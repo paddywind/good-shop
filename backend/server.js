@@ -27,12 +27,10 @@ const connectDB = async () => {
 connectDB();
 
 // 🛣️ Import Routes
-const productRoutes = require('./src/routes/productRoutes');
 const blogRoutes = require('./src/routes/blogRoutes');
 const authRoutes = require('./src/routes/authRoutes');
 
 // ➡️ Use Routes
-app.use('/api/products', productRoutes);
 app.use('/api/blog', blogRoutes);
 app.use('/api/auth', authRoutes);
 

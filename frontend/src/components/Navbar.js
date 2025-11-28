@@ -1,17 +1,18 @@
 // /frontend/components/Navbar.js
 "use client";
-// Use the alias for clean import
+
 import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 
 export default function Navbar() {
-  const { user, isAdmin, logout } = useAuth(); // Assume isAdmin is available from context
-  const [isOpen, setIsOpen] = useState(false); // State for mobile menu
+  const { user, isAdmin, logout } = useAuth();
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+
+  // Logic to get user initial from email (e.g., "A")
+  const userInitial = user?.email ? user.email.charAt(0).toUpperCase() : '?';
 
   // Define public links
   const publicLinks = [
@@ -21,153 +22,210 @@ export default function Navbar() {
     { name: "Contact", href: "/contact" },
   ];
 
+  // Handlers to close menus after navigation/action
+  const handleLinkClick = () => {
+    setMobileOpen(false);
+    setUserMenuOpen(false);
+  };
+
+  const handleUserButtonClick = () => {
+    // If opening user menu, ensure mobile menu is closed (prevents overlap)
+    setMobileOpen(false);
+    setUserMenuOpen(prev => !prev);
+  };
+
+  const handleLogout = () => {
+    logout();
+    handleLinkClick(); // Close both menus
+  };
+
+
   return (
-    // Outer container: Fixed width, centered, sticky, rounded, shadow
-    <nav className="sticky top-0 z-50 p-5 bg-white shadow-lg border border-gray-100 transition duration-300">
-      <div className="flex justify-between items-center h-full">
+    // Main Nav Container: Sticky, high Z-index, slight shadow, subtle border
+    <nav className="sticky top-0 z-50 bg-white shadow-xl border-b border-gray-100">
+      <div className=" mx-auto px-4 py-4 sm:px-6 lg:px-8">
+        <div className="h-16 flex items-center justify-between">
 
-        {/* 1. Navbar Start (Logo and Mobile Menu) */}
-        <div className="flex items-center">
-          {/* Mobile Dropdown Button */}
-          <button
-            onClick={toggleMenu}
-            className="lg:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            aria-expanded={isOpen}
-            aria-label="Toggle navigation"
-          >
-            <svg
-              className="h-6 w-6"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
-              />
-            </svg>
-          </button>
-
-          {/* Logo/Brand Name */}
-          <Link href="/" className="text-2xl font-extrabold text-blue-500 ml-4">
+          {/* 1. Left - Logo */}
+          <Link href="/" className="text-3xl font-extrabold text-blue-500 hover:text-blue-800 transition tracking-tight">
             Community Blog
           </Link>
-        </div>
 
-        {/* 2. Navbar Center (Desktop Links) */}
-        <div className="hidden lg:flex flex-grow justify-center">
-          <ul className="flex space-x-8 text-lg font-medium">
+          {/* 2. Center - Desktop Links (Hidden on small screens) */}
+          <ul className="hidden lg:flex items-center space-x-8 text-gray-700 font-medium">
             {publicLinks.map((link) => (
               <li key={link.name}>
-                <Link href={link.href} className="text-gray-700 hover:text-blue-500 transition">
+                <Link
+                  href={link.href}
+                  className="hover:text-blue-600 transition text-base relative group"
+                >
                   {link.name}
+                  {/* Subtle underline effect */}
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                 </Link>
               </li>
             ))}
           </ul>
-        </div>
 
-        {/* 3. Navbar End (Auth/User Menu) */}
-        <div className="flex items-center space-x-3">
-          {user ? (
-            <div className="relative">
-              {/* User Avatar Button */}
-              <button
-                onClick={toggleMenu} // Use the same toggle for simplicity or a dedicated user menu toggle
-                className="flex items-center space-x-2 p-1 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-100 transition focus:outline-none"
+          {/* 3. Right Side (Auth/User) */}
+          <div className="flex items-center space-x-3">
+
+            {/* Login button */}
+            {!user && (
+              <Link
+                href="/login"
+                className="hidden sm:inline-block px-5 py-2.5 bg-blue-600 text-white rounded-full text-sm font-bold hover:bg-blue-700 transition shadow-lg"
               >
-                <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-indigo-400">
-                  {/* Placeholder image if photoURL is missing */}
-                  <img
-                    src={user.photoURL || 'https://via.placeholder.com/150?text=User'}
-                    alt="User Photo"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <span className="hidden md:inline">{user.displayName || user.email}</span>
-              </button>
+                Sign In
+              </Link>
+            )}
 
-              {/* User Dropdown Content */}
-              {isOpen && ( // Control visibility with isOpen state
-                <ul className="absolute right-0 mt-2 w-56 p-2 bg-white rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 z-20 origin-top-right">
-                  <li>
-                    <span className="block px-4 py-2 text-sm font-semibold text-gray-800 border-b mb-1">
-                      {user.displayName || user.email}
+            {/* User Menu */}
+            {user && (
+              <div className="relative hidden lg:flex">
+                <button
+                  onClick={handleUserButtonClick}
+                  className="flex items-center space-x-2 rounded-full p-1 transition ring-2 ring-transparent hover:ring-blue-400 focus:outline-none focus:ring-blue-400"
+                >
+
+                  <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center border-2 border-gray-200">
+                    <span className="text-white font-bold text-lg">
+                      {userInitial}
                     </span>
-                  </li>
-                  {/* Admin Links (Conditional Rendering) */}
-                  {isAdmin && (
-                    <>
-                      <li>
-                        <Link href="/admin/dashboard" className="block px-4 py-2 text-sm text-indigo-600 hover:bg-gray-100 rounded-md">
-                          Admin Dashboard
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/admin/blog/add" className="block px-4 py-2 text-sm text-indigo-600 hover:bg-gray-100 rounded-md">
-                          Write New Post
-                        </Link>
-                      </li>
-                    </>
-                  )}
-                  <li>
-                    <button
-                      onClick={logout}
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md"
-                    >
-                      Logout
-                    </button>
-                  </li>
-                </ul>
-              )}
-            </div>
-          ) : (
-            // Login Button
-            <Link
-              href="/login"
-              className="px-4 py-2 text-sm font-semibold text-white bg-blue-400 rounded-lg hover:bg-blue-500 transition shadow-md"
+                  </div>
+
+
+                  {/* Display Name/Email */}
+                  <span className="hidden sm:inline text-sm font-medium text-gray-800">
+                    {user.displayName || user.email?.split('@')[0]}
+                  </span>
+                </button>
+
+                {userMenuOpen && (
+                  // User Dropdown: Absolute positioning, z-index for stacking, polished shadow
+                  <ul className="absolute right-0 mt-3 w-56 bg-white shadow-2xl rounded-xl border border-gray-100 py-2 text-sm z-40 origin-top-right transform scale-100 transition duration-150 ease-out">
+                    <li className="px-4 py-2 font-bold text-gray-900 border-b mb-1 truncate">
+                      {user.displayName || user.email}
+                    </li>
+
+                    {isAdmin && (
+                      <>
+                        <li>
+                          <Link
+                            href="/admin"
+                            className="block px-4 py-2 text-blue-600 hover:bg-gray-100 rounded-md mx-2 transition"
+                            onClick={handleLinkClick}
+                          >
+                            📊 Admin panel
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            href="/admin/blog/add"
+                            className="block px-4 py-2 text-blue-600 hover:bg-gray-100 rounded-md mx-2 transition"
+                            onClick={handleLinkClick}
+                          >
+                            ✍️ Write New Post
+                          </Link>
+                        </li>
+                        <hr className="my-1 border-gray-100" />
+                      </>
+                    )}
+
+                    <li>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 rounded-md mx-2 transition"
+                      >
+                        🚪 Logout
+                      </button>
+                    </li>
+                  </ul>
+                )}
+              </div>
+            )}
+
+            {/* Mobile Menu Button (Hamburger) */}
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="lg:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label="Toggle navigation"
             >
-              Login
-            </Link>
-          )}
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d={
+                    mobileOpen
+                      ? "M6 18L18 6M6 6l12 12" // X icon
+                      : "M4 6h16M4 12h16M4 18h16" // Hamburger icon
+                  }
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* 4. Mobile Menu (Below the main bar, only visible when opened) */}
-      {isOpen && (
-        <div className="lg:hidden mt-3 pt-3 border-t border-gray-200">
-          <ul className="space-y-2">
-            {publicLinks.map((link) => (
-              <li key={`mobile-${link.name}`}>
-                <Link href={link.href} onClick={toggleMenu} className="block px-4 py-2 text-base text-gray-700 hover:bg-gray-100 rounded-md">
-                  {link.name}
-                </Link>
-              </li>
-            ))}
-            {/* Mobile Admin/Logout Links */}
-            {user && (
-              <>
-                {isAdmin && (
-                  <li>
-                    <Link href="/admin/dashboard" onClick={toggleMenu} className="block px-4 py-2 text-base text-indigo-600 hover:bg-gray-100 rounded-md font-semibold">
-                      Admin Dashboard
-                    </Link>
-                  </li>
-                )}
-                <li>
-                  <button
-                    onClick={() => { logout(); toggleMenu(); }}
-                    className="w-full text-left px-4 py-2 text-base text-red-600 hover:bg-gray-100 rounded-md font-semibold"
+      {/* 4. Mobile Dropdown (Full Width, Styled Menu) */}
+      {mobileOpen && (
+        <div className="lg:hidden shadow-lg bg-white absolute w-full border-t border-gray-100 z-40">
+          <div className="py-2">
+            <ul className="space-y-1">
+              {publicLinks.map((link) => (
+                <li key={`mobile-${link.name}`}>
+                  <Link
+                    href={link.href}
+                    className="block px-6 py-2 text-gray-700 font-medium hover:bg-blue-50 hover:text-blue-600 transition"
+                    onClick={handleLinkClick}
                   >
-                    Logout
-                  </button>
+                    {link.name}
+                  </Link>
                 </li>
-              </>
-            )}
-          </ul>
+              ))}
+
+              {/* Conditional Mobile Auth Links */}
+              {!user ? (
+                <li>
+                  <Link
+                    href="/login"
+                    className="block px-6 py-2 text-center my-2 bg-blue-600 text-white font-bold rounded-lg mx-4 hover:bg-blue-700 transition"
+                    onClick={handleLinkClick}
+                  >
+                    Sign In
+                  </Link>
+                </li>
+              ) : (
+                <>
+                  {isAdmin && (
+                    <li>
+                      <Link
+                        href="/admin"
+                        className="block px-6 py-2 text-blue-600 font-medium hover:bg-blue-50 transition"
+                        onClick={handleLinkClick}
+                      >
+                        📊 Admin panel
+                      </Link>
+                    </li>
+                  )}
+                  <li>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-6 py-2 text-red-600 font-medium hover:bg-red-50 transition"
+                    >
+                      🚪 Logout
+                    </button>
+                  </li>
+                </>
+              )}
+            </ul>
+          </div>
         </div>
       )}
     </nav>

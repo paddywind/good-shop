@@ -45,7 +45,7 @@ export default function FeaturedProducts() {
         Featured Blog Posts
       </h2>
 
-      <div className="flex flex-wrap justify-center gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {blog.map((item) => (
           <BlogPostCard key={item.slug} post={item} />
         ))}

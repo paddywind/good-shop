@@ -1,34 +1,32 @@
-// /frontend/app/(admin)/blog/edit/[slug]/page.js
 'use client';
-import { use } from 'react';
+
 import { fetchProtectedData } from '@/lib/secureApi';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
+import { useToast } from '../../../../../../context/ToastContext';
 
 export default function EditBlogPostPage({ params }) {
   const resolvedParams = use(params);
   const slug = resolvedParams.slug;
   const router = useRouter();
+  const { addToast } = useToast();
 
   const [formData, setFormData] = useState({
     title: '',
     content: '',
     author: '',
-    featuredImage: null, // New file object
-    currentImageUrl: '', // Existing URL for display
+    featuredImage: null,
+    currentImageUrl: '',
   });
 
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
 
-  // --- Initial Data Fetch (Protected GET Request) ---
   useEffect(() => {
     async function loadPost() {
       try {
-        // Fetch by slug
         const post = await fetchProtectedData(`blog/${slug}`, 'GET');
 
         setFormData({
@@ -39,23 +37,23 @@ export default function EditBlogPostPage({ params }) {
           currentImageUrl: post.imageUrl,
         });
       } catch (err) {
-        setError(err.message || 'Failed to load blog post data.');
+        const msg = err.message || 'Failed to load blog post data.';
+        setError(msg);
+        addToast(msg, 'error');
       } finally {
         setLoading(false);
       }
     }
-    if (slug) {
-      loadPost();
-    }
-  }, [slug]);
 
-  // --- Form Handlers ---
+    if (slug) loadPost();
+  }, [slug, addToast]);
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === 'featuredImage' && files) {
-      setFormData(prev => ({ ...prev, [name]: files[0] }));
+      setFormData((prev) => ({ ...prev, featuredImage: files[0] }));
     } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
@@ -63,110 +61,148 @@ export default function EditBlogPostPage({ params }) {
     e.preventDefault();
     setSubmitting(true);
     setError('');
-    setSuccess(false);
 
-    // 1. Prepare FormData (required for file upload)
-    const dataWithFile = new FormData();
-    dataWithFile.append('title', formData.title);
-    dataWithFile.append('content', formData.content);
-    dataWithFile.append('author', formData.author);
+    const data = new FormData();
+    data.append('title', formData.title);
+    data.append('content', formData.content);
+    data.append('author', formData.author);
 
-    // 2. Append the image ONLY if a new file was selected
     if (formData.featuredImage) {
-      // Key MUST match the fieldname expected by Multer in Express ('featuredImage')
-      dataWithFile.append('featuredImage', formData.featuredImage);
+      data.append('featuredImage', formData.featuredImage);
     }
 
     try {
-      // 3. Call the protected API function with PUT method, using the original slug
-      const updatedPost = await fetchProtectedData(`blog/${slug}`, 'PUT', dataWithFile);
+      const updated = await fetchProtectedData(`blog/${slug}`, 'PUT', data);
 
-      setSuccess(true);
-      // Update the displayed image instantly if a new one was uploaded, and update URL if slug changed
-      setFormData(prev => ({
+      addToast(`"${updated.title}" updated successfully!`, 'success');
+
+      setFormData((prev) => ({
         ...prev,
-        currentImageUrl: updatedPost.imageUrl,
-        title: updatedPost.title,
-        featuredImage: null
+        currentImageUrl: updated.imageUrl,
+        featuredImage: null,
       }));
 
-      // If the title changed, the slug changed on the backend. We should redirect to the new slug.
-      if (updatedPost.slug !== slug) {
-        router.push(`/admin/blog/edit/${updatedPost.slug}`);
+      if (updated.slug && updated.slug !== slug) {
+        router.push(`/admin/blog/edit/${updated.slug}`);
       } else {
-        setTimeout(() => {
-          router.push('/admin/dashboard');
-        }, 1500);
+        setTimeout(() => router.push('/admin'), 1500);
       }
-
     } catch (err) {
-      setError(err.message || 'Failed to update blog post.');
+      const msg = err.message || 'Failed to update blog post.';
+      setError(msg);
+      addToast(msg, 'error');
     } finally {
       setSubmitting(false);
     }
   };
 
   if (loading) {
-    return <p>Loading blog post details...</p>;
+    return (
+      <div className="flex justify-center items-center h-48">
+        <p className="text-gray-700 text-lg">Loading...</p>
+      </div>
+    );
   }
 
-  // --- Render Form (Similar to Edit Product Form) ---
   return (
-    <div className="max-w-3xl">
-      <h1 className="text-3xl font-bold mb-6">Edit Blog Post: {formData.title}</h1>
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-gray-900 mb-6">
+        Edit Blog Post
+      </h1>
 
-      {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-4">{error}</p>}
-      {success && <p className="text-green-500 bg-green-100 p-3 rounded mb-4">Post updated successfully!</p>}
+      {error && (
+        <div className="bg-red-50 text-red-700 border border-red-200 p-4 rounded mb-6">
+          {error}
+        </div>
+      )}
 
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
-
-        {/* Current Image Preview */}
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-8 rounded-xl shadow-sm"
+      >
+        {/* CURRENT IMAGE */}
         {formData.currentImageUrl && (
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2">Current Image</label>
-            <Image
-              src={formData.currentImageUrl}
-              alt="Current Featured Image"
-              width={300}
-              height={150}
-              className="rounded-lg object-cover"
-            />
+          <div className="mb-6">
+            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+              Current Image
+            </label>
+            <div className="w-full">
+              <Image
+                src={formData.currentImageUrl}
+                alt="Current featured"
+                width={700}
+                height={400}
+                className="rounded-lg object-cover border border-gray-200 dark:border-gray-700"
+              />
+            </div>
           </div>
         )}
 
+        {/* NEW IMAGE */}
         <div className="mb-6">
-          <label htmlFor="featuredImage" className="block text-gray-700 font-medium">Replace Image (Optional)</label>
+          <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+            Replace Image (optional)
+          </label>
           <input
             type="file"
-            id="featuredImage"
             name="featuredImage"
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded mt-1 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+            className="block w-full text-gray-900 dark:text-gray-200 border border-gray-300 dark:border-gray-700 rounded-lg p-2 bg-white dark:bg-gray-800"
           />
         </div>
 
-        <div className="mb-4">
-          <label htmlFor="title" className="block text-gray-700 font-medium">Title</label>
-          <input type="text" id="title" name="title" value={formData.title} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded mt-1" required />
+        {/* TITLE */}
+        <div className="mb-6">
+          <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+            Title
+          </label>
+          <input
+            type="text"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+            required
+          />
         </div>
 
-        <div className="mb-4">
-          <label htmlFor="author" className="block text-gray-700 font-medium">Author</label>
-          <input type="text" id="author" name="author" value={formData.author} onChange={handleChange} className="w-full p-2 border border-gray-300 rounded mt-1" required />
+        {/* AUTHOR */}
+        <div className="mb-6">
+          <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+            Author
+          </label>
+          <input
+            type="text"
+            name="author"
+            value={formData.author}
+            onChange={handleChange}
+            className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+            required
+          />
         </div>
 
-        <div className="mb-4">
-          <label htmlFor="content" className="block text-gray-700 font-medium">Content</label>
-          <textarea id="content" name="content" value={formData.content} onChange={handleChange} rows="10" className="w-full p-2 border border-gray-300 rounded mt-1" required />
+        {/* CONTENT */}
+        <div className="mb-6">
+          <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
+            Content
+          </label>
+          <textarea
+            name="content"
+            value={formData.content}
+            onChange={handleChange}
+            rows={12}
+            className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 leading-relaxed"
+            required
+          />
         </div>
 
-
+        {/* SUBMIT */}
         <button
           type="submit"
           disabled={submitting}
-          className="w-full bg-green-600 text-white p-3 rounded font-semibold hover:bg-green-700 transition disabled:bg-gray-400"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition disabled:bg-gray-400"
         >
-          {submitting ? 'Updating Post...' : 'Update Post'}
+          {submitting ? 'Updating...' : 'Update Post'}
         </button>
       </form>
     </div>

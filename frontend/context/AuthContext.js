@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }) => {
 
         // Redirect admin to the protected dashboard
         if (data.isAdmin) {
-          router.push('/admin/dashboard');
+          router.push('/admin');
         } else {
           router.push('/'); // Or handle non-admin users differently
         }

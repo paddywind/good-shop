@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section className="bg-blue-500 text-white py-20 px-5 md:px-20 rounded-lg relative">
+    <section className="bg-blue-500 text-white py-20 px-4 md:px-20 rounded-md relative">
       <div className="max-w-4xl mx-auto text-center md:text-left">
         {/* Headline */}
         <h1 className="text-4xl md:text-6xl font-bold mb-4">

@@ -1,7 +1,6 @@
-// /frontend/app/(public)/blog/page.js
+// /frontend/app/(public)/blog/page.js (REVISED)
 import { fetchPublicData } from '@/lib/api';
-import BlogPostCard from '@/components/BlogPostCard'; // We will create this next
-import Link from 'next/link';
+import BlogFilter from '@/components/BlogFilter'; // Import the new client component
 
 // Server component function for data fetching
 async function getBlogPosts() {
@@ -11,27 +10,18 @@ async function getBlogPosts() {
 }
 
 export default async function BlogListPage() {
-  const posts = await getBlogPosts();
+  const posts = await getBlogPosts(); // Data fetched on the server
 
   return (
-    <main className="container mx-auto p-4">
-      <h1 className="text-4xl font-extrabold mb-8 text-gray-900">The Developer Blog</h1>
-
-      {posts.length === 0 ? (
-        <p>No blog posts published yet.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts.map((post) => (
-            <BlogPostCard key={post.slug} post={post} />
-          ))}
-        </div>
-      )}
-
-      <div className="mt-8 text-center">
-        <Link href="/" className="text-blue-600 hover:underline">
-          &larr; Back to Shop
-        </Link>
+    <main className="max-w-7xl mx-auto p-4 md:p-8 min-h-screen">
+      <div className="text-center">
+        <h1 className="text-5xl font-extrabold mb-3 text-gray-900">The Community Blog</h1>
+        <p className="text-xl text-gray-600">Explore articles, tutorials, and insights.</p>
       </div>
+
+      {/* Pass the server-fetched data to the client component for filtering */}
+      <BlogFilter initialPosts={posts} />
+
     </main>
   );
 }

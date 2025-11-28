@@ -28,8 +28,7 @@ export default async function BlogPostDetailPage({ params }) {
   return (
     <main className="container mx-auto p-8 max-w-4xl bg-white shadow-lg rounded-xl mt-10">
       <div className="mb-8">
-        <h1 className="text-5xl font-extrabold mb-4 text-gray-900 leading-tight">{title}</h1>
-        <p className="text-lg text-gray-500">By **{author}** | Published on {date}</p>
+        <h2 className="text-5xl font-extrabold mb-4 text-gray-900 leading-tight">{title}</h2>
       </div>
 
       {/* Featured Image */}
@@ -42,18 +41,19 @@ export default async function BlogPostDetailPage({ params }) {
           priority
         />
       </div>
+      <p className="text-lg text-gray-500">Written by <span className='font-bold'>{author}</span>, Published on {date}</p>
 
       {/* Post Content */}
-      <div className="prose lg:prose-lg max-w-none text-gray-700">
+      <div className="prose lg:prose-lg max-w-none text-gray-700 mt-5">
         {/* The content is rendered here. Since it's plain text from the DB, 
                 we use 'whitespace-pre-wrap' for basic formatting (new lines). 
                 If you use a rich text editor later, this would be dangerouslySetInnerHTML. 
             */}
-        <p className="whitespace-pre-wrap leading-relaxed">{content}</p>
+        <p className="whitespace-pre-wrap leading-relaxed text-base">{content}</p>
       </div>
 
-      <Link href="/blog" className="mt-12 inline-block text-indigo-600 hover:underline">
-        &larr; Back to all posts
+      <Link href="/blog" className="mt-12 inline-block text-blue-500 hover:underline">
+        Back to all posts
       </Link>
     </main>
   );

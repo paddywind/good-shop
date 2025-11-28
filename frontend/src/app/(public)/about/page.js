@@ -1,39 +1,63 @@
+// /frontend/app/(public)/about/page.js (REVISED CONTENT)
 
 export default function About() {
   return (
-    <div className="w-11/12 mx-auto my-10">
-      <h1 className="text-4xl md:text-5xl font-bold text-center mb-8">
-        About Us
-      </h1>
+    <div className="min-h-screen bg-white">
+      <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
 
-      <p className="max-w-3xl mx-auto text-center text-lg md:text-xl text-gray-700 mb-12">
-        Welcome to MyShop! We are passionate about providing high-quality
-        products and exceptional customer service. Our mission is to make
-        shopping easy, fun, and trustworthy for everyone.
-      </p>
-
-      <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-        <div className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-xl transition">
-          <h2 className="text-2xl font-semibold mb-2 text-black">Our Mission</h2>
-          <p className="text-gray-600">
-            Deliver the best products at the best prices with excellent customer
-            support.
+        {/* Header Section */}
+        <header className="text-center mb-16">
+          <h1 className="text-6xl font-extrabold text-gray-900 tracking-tight mb-4">
+            About The Community Blog
+          </h1>
+          <p className="max-w-4xl mx-auto text-xl text-gray-600">
+            Welcome to the Community Blog, a platform dedicated to sharing knowledge, code, and insights in the ever-evolving world of technology. Our mission is to connect developers and enthusiasts through high-quality, practical content.
           </p>
+        </header>
+
+        {/* Decorative Divider */}
+        <div className="flex justify-center mb-16">
+          <div className="w-24 h-1 bg-blue-600 rounded-full"></div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-xl transition">
-          <h2 className="text-2xl font-semibold mb-2 text-black">Our Vision</h2>
-          <p className="text-gray-600">
-            Become a trusted online store for customers worldwide.
-          </p>
-        </div>
+        {/* Mission, Vision, Values Section */}
+        <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
 
-        <div className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-xl transition">
-          <h2 className="text-2xl font-semibold mb-2 text-black">Our Values</h2>
-          <p className="text-gray-600">
-            Quality, transparency, and customer satisfaction are at the heart of
-            everything we do.
-          </p>
+          {/* Mission Card (Focus: Knowledge Sharing) */}
+          <div className="bg-white rounded-xl shadow-xl p-8 text-center border-t-4 border-blue-600 transition hover:shadow-2xl hover:-translate-y-1 duration-300">
+            <div className="text-blue-600 mb-4 mx-auto">
+              {/* Icon for Sharing/Community */}
+              <svg className="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20v-2c0-.528-.192-1.01-.529-1.385m1.066 3.033A5 5 0 0015 15.176V14a2 2 0 10-4 0v1.176c-.534.195-1.01.48-1.425.867M5 20h5v-2a3 3 0 00-5.356-1.857M5 20v-2c0-.528.192-1.01.529-1.385m1.066 3.033A5 5 0 005 15.176V14a2 2 0 10-4 0v1.176c-.534.195-1.01.48-1.425.867M12 20h5v-2a3 3 0 00-5.356-1.857M12 20v-2c0-.528.192-1.01.529-1.385m1.066 3.033A5 5 0 0012 15.176V14a2 2 0 10-4 0v1.176c-.534.195-1.01.48-1.425.867"></path></svg>
+            </div>
+            <h2 className="text-2xl font-bold mb-3 text-gray-900">Our Mission</h2>
+            <p className="text-lg text-gray-700">
+              To foster a supportive community where individuals feel empowered to share their coding insights, tutorials, and experiences, benefiting all readers.
+            </p>
+          </div>
+
+          {/* Vision Card (Focus: Growth & Learning) */}
+          <div className="bg-white rounded-xl shadow-xl p-8 text-center border-t-4 border-green-600 transition hover:shadow-2xl hover:-translate-y-1 duration-300">
+            <div className="text-green-600 mb-4 mx-auto">
+              {/* Icon for Vision/Growth */}
+              <svg className="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            </div>
+            <h2 className="text-2xl font-bold mb-3 text-gray-900">Our Vision</h2>
+            <p className="text-lg text-gray-700">
+              To become the most reliable and engaging source for developers seeking practical solutions and deep dives into modern software practices.
+            </p>
+          </div>
+
+          {/* Values Card (Focus: Integrity & Quality) */}
+          <div className="bg-white rounded-xl shadow-xl p-8 text-center border-t-4 border-indigo-600 transition hover:shadow-2xl hover:-translate-y-1 duration-300">
+            <div className="text-indigo-600 mb-4 mx-auto">
+              {/* Icon for Values/Code Integrity */}
+              <svg className="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+            </div>
+            <h2 className="text-2xl font-bold mb-3 text-gray-900">Our Values</h2>
+            <p className="text-lg text-gray-700">
+              Technical Accuracy, Content Quality, Openness, and Respect for diverse viewpoints are the pillars of our community.
+            </p>
+          </div>
         </div>
       </div>
     </div>

@@ -15,8 +15,8 @@ export const AuthProvider = ({ children }) => {
   const router = useRouter();
 
   // Base URL for the Express API
-  const AUTH_URL = 'http://localhost:5000/api/auth';
-
+  // const AUTH_URL = 'http://localhost:5000/api/auth';
+  const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
   // --- Load token from storage on mount ---
   useEffect(() => {
     const storedToken = localStorage.getItem('jwt_token');
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
   //register function
   const register = async (email, password) => {
     try {
-      const response = await fetch(`${AUTH_URL}/admin-register`, {
+      const response = await fetch(`${BASE_URL}/api/admin-register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
   // --- Login Function ---
   const login = async (email, password) => {
     try {
-      const response = await fetch(`${AUTH_URL}/login`, {
+      const response = await fetch(`${BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

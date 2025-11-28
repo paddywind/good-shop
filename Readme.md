@@ -1,6 +1,6 @@
 # Good Shop
 
-A simple full‑stack e-commerce / blog demo with a Node/Express backend and a Next.js frontend.
+A simple full‑stack blog demo with a Node/Express backend and a Next.js frontend.
 
 ## Repository layout
 

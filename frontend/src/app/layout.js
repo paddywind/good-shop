@@ -10,9 +10,7 @@ export default function RootLayout({ children }) {
       <body>
         <ToastProvider>
           <AuthProvider>
-            <Navbar />
             {children}
-            <Footer />
           </AuthProvider>
         </ToastProvider>
       </body>

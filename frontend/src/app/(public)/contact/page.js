@@ -77,16 +77,6 @@ export default function Contact() {
         </form>
       </div>
 
-      {/* Contact Info */}
-      <div className="max-w-3xl mx-auto mt-14 text-center text-gray-600 dark:text-gray-300">
-        <p className="text-lg">
-          <span className="font-semibold dark:text-gray-200">Email:</span> support@myshop.com
-        </p>
-        <p className="text-lg mt-2">
-          <span className="font-semibold dark:text-gray-200">Address:</span> Dhaka, Bangladesh
-        </p>
-      </div>
-
     </div>
   );
 }

@@ -1,33 +1,56 @@
-// /frontend/components/BlogPostCard.js
-import Link from 'next/link';
-import Image from 'next/image';
+import Image from "next/image";
+import Link from "next/link";
 
 export default function BlogPostCard({ post }) {
   const { title, slug, author, imageUrl, createdAt } = post;
 
-  // Format the date for display
-  const date = new Date(createdAt).toLocaleDateString('en-US', {
-    year: 'numeric', month: 'long', day: 'numeric'
+  const date = new Date(createdAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 
   return (
-    <div className=" p-3 rounded-sm shadow-md overflow-hidden transition hover:shadow-xl dark:bg-white">
-      <div className="relative w-full h-52">
+    <div className="
+      group rounded-2xl overflow-hidden bg-white dark:bg-gray-900
+      border border-gray-200 dark:border-gray-800
+      shadow-sm hover:shadow-lg transition-all
+    ">
+      {/* Image */}
+      <div className="relative w-full h-56 overflow-hidden">
         <Image
           src={imageUrl}
           alt={title}
-          layout="fill"
-          objectFit="cover"
+          fill
+          className="object-cover transition duration-300 group-hover:scale-105"
         />
       </div>
+
+      {/* Content */}
       <div className="p-5">
-        <Link href={`/blog/${slug}`} className="text-gray-500 hover:text-blue-500">
-          <h2 className="text-2xl font-bold line-clamp-2">{title}</h2>
+        <Link href={`/blog/${slug}`}>
+          <h2 className="
+            text-xl font-semibold text-gray-900 dark:text-white
+            leading-snug line-clamp-2 group-hover:text-blue-600
+            transition-colors
+          ">
+            {title}
+          </h2>
         </Link>
-        <p className="text-sm text-gray-500 mt-2">
-          By {author} on {date}
+
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          By {author} — {date}
         </p>
-        <Link href={`/blog/${slug}`} className="mt-4 text-center inline-block text-blue-500 hover:underline font-medium">
+
+        {/* CTA */}
+        <Link
+          href={`/blog/${slug}`}
+          className="
+            mt-4 inline-block text-sm font-medium
+            text-blue-600 dark:text-blue-400
+            hover:underline
+          "
+        >
           Read Post
         </Link>
       </div>

@@ -54,7 +54,7 @@ export default function Reviews() {
                   alt={review.name}
                   width={50}
                   height={50}
-                  quality={80} // Optimize image loading
+                  quality={75} // Optimize image loading
                   className="w-12 h-12 rounded-full object-cover mr-4 ring-2 ring-indigo-500"
                 />
                 <div>

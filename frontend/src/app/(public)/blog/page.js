@@ -2,6 +2,9 @@
 import BlogFilter from '@/components/BlogFilter'; // Import the new client component
 import { fetchPublicData } from '@/lib/api';
 
+// Ensure this page is rendered dynamically on the server in production
+export const dynamic = 'force-dynamic';
+
 // Server component function for data fetching
 async function getBlogPosts() {
   // Hits the Express API: /api/blog

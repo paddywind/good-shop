@@ -1,7 +1,6 @@
-// /frontend/app/dashboard/blog/page.js (REVISED)
 'use client';
 
-import DeleteConfirmationModal from '@/components/DeleteConfirmationModal'; // <-- Import Modal
+import DeleteConfirmationModal from '@/components/DeleteConfirmationModal';
 import { fetchProtectedData } from '@/lib/secureApi';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -12,11 +11,11 @@ export default function BlogListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // --- New State for Modal ---
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [postToDelete, setPostToDelete] = useState(null); // { slug, title }
+  const [postToDelete, setPostToDelete] = useState(null);
+
   const { addToast } = useToast();
-  // --- Data Fetching Function ---
+
   const loadBlogPosts = async () => {
     setLoading(true);
     setError('');
@@ -34,7 +33,6 @@ export default function BlogListPage() {
     loadBlogPosts();
   }, []);
 
-  // --- Modal Control Functions ---
   const openDeleteModal = (slug, title) => {
     setPostToDelete({ slug, title });
     setIsModalOpen(true);
@@ -45,104 +43,134 @@ export default function BlogListPage() {
     setPostToDelete(null);
   };
 
-
-  // --- Final Delete Confirmation Handler ---
   const handleConfirmDelete = async () => {
     if (!postToDelete) return;
+    closeDeleteModal();
 
-    closeDeleteModal(); // Close modal immediately
-
-    // Use the stored postToDelete slug and title
     const { slug, title } = postToDelete;
 
     try {
-      // Call the DELETE endpoint
       await fetchProtectedData(`blog/${slug}`, 'DELETE');
 
-      // Update UI instantly
-      setPosts(prev => prev.filter(post => post.slug !== slug));
-      // Optional: Show a success toast/alert here instead of standard alert
+      setPosts((prev) => prev.filter((post) => post.slug !== slug));
       addToast(`Blog post "${title}" deleted successfully.`, 'success');
-
     } catch (err) {
-      setError(err.message || 'Failed to delete blog post. Permission denied.');
+      setError(err.message || 'Failed to delete blog post.');
       loadBlogPosts();
     }
   };
 
+  if (loading) return <p className="p-8 text-lg">Loading blog posts...</p>;
+  if (error)
+    return (
+      <p className="p-6 rounded-md border border-red-300 text-red-600 bg-red-50">
+        {error}
+      </p>
+    );
 
-  // --- Loading and Error States ---
-  if (loading) {
-    return <p className="p-8 text-lg">Loading blog posts...</p>;
-  }
-
-  if (error) {
-    return <p className="p-8 text-red-600 bg-red-100 rounded-lg">{error}</p>;
-  }
-
-  // --- Render Table and Modal ---
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Manage Blog Posts</h1>
+    <div className="p-4 md:p-6">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
+        <h1 className="text-2xl md:text-3xl font-semibold tracking-tight text-gray-900">
+          Blog Posts
+        </h1>
+
         <Link
           href="/admin/blog/add"
-          className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition shadow-md"
+          className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-green-500 text-white text-sm font-medium shadow-sm hover:bg-green-600 transition"
         >
           + Add New Post
         </Link>
       </div>
 
-      {/* ... Table rendering logic ... */}
+      {/* Empty State */}
       {posts.length === 0 ? (
-        <p className="text-gray-600 mt-10 p-4 border rounded-lg bg-white">No blog posts found. Please add a new one.</p>
+        <div className="rounded-lg border bg-white p-6 text-gray-600 shadow-sm">
+          No blog posts found.
+        </div>
       ) : (
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/2">Title</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Author</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {posts.map((post) => (
-                <tr key={post._id} className="hover:bg-gray-50 transition">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {post.title}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {post.author}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <Link
-                      href={`/admin/blog/edit/${post.slug}`}
-                      className="text-indigo-600 hover:text-indigo-900 mr-4"
-                    >
-                      Edit
-                    </Link>
-                    <button
-                      // Use the new modal opener function
-                      onClick={() => openDeleteModal(post.slug, post.title)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Delete
-                    </button>
-                  </td>
+        <div className="rounded-lg border bg-white shadow-sm overflow-hidden">
+          {/* Desktop Table */}
+          <div className="hidden md:block">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 border-b">
+                <tr>
+                  <th className="px-6 py-3 text-left font-medium text-gray-500">
+                    Title
+                  </th>
+                  <th className="px-6 py-3 text-left font-medium text-gray-500">
+                    Author
+                  </th>
+                  <th className="px-6 py-3 text-left font-medium text-gray-500">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody className="divide-y divide-gray-100">
+                {posts.map((post) => (
+                  <tr
+                    key={post._id}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="px-6 py-4 font-medium text-gray-900">
+                      {post.title}
+                    </td>
+                    <td className="px-6 py-4 text-gray-500">{post.author}</td>
+                    <td className="px-6 py-4 flex items-center gap-4 text-sm">
+                      <Link
+                        href={`/admin/blog/edit/${post.slug}`}
+                        className="text-blue-500 hover:text-blue-600 font-medium"
+                      >
+                        Edit
+                      </Link>
+
+                      <button
+                        onClick={() => openDeleteModal(post.slug, post.title)}
+                        className="text-red-500 hover:text-red-600 font-medium"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="md:hidden divide-y divide-gray-100">
+            {posts.map((post) => (
+              <div key={post._id} className="p-4">
+                <p className="font-medium text-gray-900">{post.title}</p>
+                <p className="text-gray-500 text-sm mt-1">{post.author}</p>
+
+                <div className="flex items-center gap-6 mt-4">
+                  <Link
+                    href={`/admin/blog/edit/${post.slug}`}
+                    className="text-blue-500 text-sm font-medium hover:text-blue-600"
+                  >
+                    Edit
+                  </Link>
+
+                  <button
+                    onClick={() => openDeleteModal(post.slug, post.title)}
+                    className="text-red-500 text-sm font-medium hover:text-red-600"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
-      {/* --- Delete Confirmation Modal Render --- */}
       <DeleteConfirmationModal
         isOpen={isModalOpen}
         onClose={closeDeleteModal}
         onConfirm={handleConfirmDelete}
-        // Safely pass the title to the modal
         title={postToDelete?.title || 'this post'}
       />
     </div>

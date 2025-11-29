@@ -1,8 +1,8 @@
-// /frontend/app/(public)/blog/page.js (REVISED)
+// /frontend/app/(public)/blog/page.js
 import BlogFilter from '@/components/BlogFilter'; // Import the new client component
 import { fetchPublicData } from '@/lib/api';
 
-// Ensure this page is rendered dynamically on the server in production
+// to ensure page is rendered dynamically on the server in production
 export const dynamic = 'force-dynamic';
 
 // Server component function for data fetching

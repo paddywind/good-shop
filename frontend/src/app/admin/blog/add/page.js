@@ -1,4 +1,3 @@
-// /frontend/app/(admin)/blog/add/page.js (REVISED)
 'use client';
 
 import { fetchProtectedData } from '@/lib/secureApi';
@@ -8,24 +7,24 @@ import { useToast } from '../../../../../context/ToastContext';
 
 export default function AddBlogPostPage() {
   const router = useRouter();
-  const { addToast } = useToast(); // <-- Initialize the toast hook
+  const { addToast } = useToast();
 
   const [formData, setFormData] = useState({
     title: '',
     content: '',
     author: '',
-    featuredImage: null, // To hold the File object
+    featuredImage: null,
   });
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(''); // We will still use this for form-specific errors (like missing image)
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === 'featuredImage' && files) {
-      setFormData(prev => ({ ...prev, [name]: files[0] }));
+      setFormData((prev) => ({ ...prev, [name]: files[0] }));
     } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
@@ -34,117 +33,119 @@ export default function AddBlogPostPage() {
     setLoading(true);
     setError('');
 
-    // 1. Check for required image before API call
     if (!formData.featuredImage) {
-      const missingImageError = 'Please select a featured image.';
-      setError(missingImageError);
-      addToast(missingImageError, 'error'); // Show toast for immediate feedback
+      const msg = 'Please select a featured image.';
+      setError(msg);
+      addToast(msg, 'error');
       setLoading(false);
       return;
     }
 
-    // 2. Prepare FormData for file upload
-    const dataWithFile = new FormData();
-    dataWithFile.append('title', formData.title);
-    dataWithFile.append('content', formData.content);
-    dataWithFile.append('author', formData.author);
-    dataWithFile.append('featuredImage', formData.featuredImage); // Image is guaranteed here
+    const body = new FormData();
+    body.append('title', formData.title);
+    body.append('content', formData.content);
+    body.append('author', formData.author);
+    body.append('featuredImage', formData.featuredImage);
 
     try {
-      // 3. Call the protected API function (POST to 'blog')
-      const newPost = await fetchProtectedData('blog', 'POST', dataWithFile);
+      const newPost = await fetchProtectedData('blog', 'POST', body);
 
-      // Show SUCCESS toast
       addToast(`Blog post "${newPost.title}" published successfully!`, 'success');
-      console.log('Blog post created:', newPost);
 
-      // Redirect after a short delay
       setTimeout(() => {
-        // NOTE: Changed redirection to /dashboard as per your Admin Layout structure
         router.push('/admin');
-      }, 1500);
-
+      }, 1200);
     } catch (err) {
-      const errorMessage = err.message || 'Failed to create blog post. Check server connection.';
-      setError(errorMessage);
-      addToast(errorMessage, 'error'); // Show ERROR toast
+      const msg = err.message || 'Failed to create blog post.';
+      setError(msg);
+      addToast(msg, 'error');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="mx-auto lg:ml-5">
-      <h1 className="text-3xl font-bold mb-6 text-gray-900">Create New Blog Post</h1>
+    <div className="max-w-3xl mx-auto p-4 md:p-6">
+      <h1 className="text-2xl md:text-3xl font-semibold text-gray-900 tracking-tight mb-6">
+        Create New Blog Post
+      </h1>
 
-      {/* Kept error display for persistent form-level errors (like image missing) */}
-      {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-4">{error}</p>}
-      {/* Removed {success && <p>... </p>} */}
+      {error && (
+        <div className="mb-5 rounded-md border border-red-300 bg-red-50 text-red-700 p-3 text-sm">
+          {error}
+        </div>
+      )}
 
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
-
-        {/* Title Input (Unchanged) */}
-        <div className="mb-4">
-          <label htmlFor="title" className="block text-gray-700 font-medium">Title</label>
+      <form
+        onSubmit={handleSubmit}
+        className="rounded-lg border bg-white shadow-sm p-6 space-y-5"
+      >
+        {/* Title */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Title
+          </label>
           <input
             type="text"
-            id="title"
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded mt-1 text-gray-900"
+            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900/10"
             required
           />
         </div>
 
-        {/* Author Input (Unchanged) */}
-        <div className="mb-4">
-          <label htmlFor="author" className="block text-gray-700 font-medium">Author</label>
+        {/* Author */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Author
+          </label>
           <input
             type="text"
-            id="author"
             name="author"
             value={formData.author}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded mt-1 text-gray-900"
+            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900/10"
             required
           />
         </div>
 
-        {/* Content Textarea (Unchanged) */}
-        <div className="mb-4">
-          <label htmlFor="content" className="block text-gray-700 font-medium">Content</label>
+        {/* Content */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Content
+          </label>
           <textarea
-            id="content"
             name="content"
+            rows="10"
             value={formData.content}
             onChange={handleChange}
-            rows="10"
-            className="w-full p-2 border border-gray-300 rounded mt-1 text-gray-900"
+            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900/10"
             required
           />
         </div>
 
-        {/* Featured Image Input (Unchanged) */}
-        <div className="mb-6">
-          <label htmlFor="featuredImage" className="block text-gray-700 font-medium">Featured Image</label>
+        {/* Featured Image */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Featured Image
+          </label>
           <input
             type="file"
-            id="featuredImage"
             name="featuredImage"
             onChange={handleChange}
-            className="text-gray-900 w-full p-2 border border-gray-300 rounded mt-1 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            className="block w-full text-gray-900 rounded-md border border-gray-300 bg-white px-3 py-2 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-gray-100 file:text-gray-700 file:font-medium hover:file:bg-gray-200 shadow-sm focus:outline-none"
             required
           />
         </div>
 
-        {/* Submit Button (Unchanged) */}
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-green-600 text-white p-3 rounded font-semibold hover:bg-green-700 transition disabled:bg-gray-400"
+          className="w-full inline-flex items-center justify-center rounded-md bg-green-600 text-white font-semibold py-3 shadow-sm hover:bg-green-700 transition disabled:bg-gray-400"
         >
-          {loading ? 'Publishing Post...' : 'Publish Post'}
+          {loading ? 'Publishing...' : 'Publish Post'}
         </button>
       </form>
     </div>

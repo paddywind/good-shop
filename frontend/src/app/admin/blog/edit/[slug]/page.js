@@ -83,10 +83,8 @@ export default function EditBlogPostPage({ params }) {
       }));
 
       if (updated.slug && updated.slug !== slug) {
-        // Redirect to new slug if it changed
         router.push(`/admin/blog/edit/${updated.slug}`);
       } else {
-        // Redirect to admin index after update
         setTimeout(() => router.push('/admin'), 1500);
       }
     } catch (err) {
@@ -107,35 +105,36 @@ export default function EditBlogPostPage({ params }) {
   }
 
   return (
-    <div className="mx-auto lg:ml-5">
-      <h1 className="text-3xl font-bold mb-6 text-gray-900">Edit Blog Post</h1>
+    <div className="max-w-3xl mx-auto py-6">
+      <h1 className="text-3xl font-semibold mb-6 text-gray-900">Edit Blog Post</h1>
 
-      {/* Kept error display consistent with Add page */}
-      {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-4">{error}</p>}
+      {error && (
+        <p className="text-red-600 bg-red-100 border border-red-200 p-3 rounded-md text-sm mb-5">
+          {error}
+        </p>
+      )}
 
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white border border-gray-200 shadow-sm rounded-xl p-6 space-y-6"
+      >
 
-        {/* CURRENT IMAGE - Using mb-6 like the Add page's main sections */}
+        {/* CURRENT IMAGE */}
         {formData.currentImageUrl && (
-          <div className="mb-6">
-            <label className="block text-gray-700 font-medium mb-2">
-              Current Image
-            </label>
-            <div className="w-full">
-              <Image
-                src={formData.currentImageUrl}
-                alt="Current featured"
-                width={700}
-                height={400}
-                // Simplified border styling for consistency
-                className="rounded-lg object-cover border border-gray-300"
-              />
-            </div>
+          <div className="space-y-2">
+            <label className="block text-gray-700 font-medium">Current Image</label>
+            <Image
+              src={formData.currentImageUrl}
+              alt="Current featured"
+              width={900}
+              height={500}
+              className="rounded-lg border border-gray-300 object-cover"
+            />
           </div>
         )}
 
-        {/* REPLACE IMAGE INPUT - Styled to match the file input in the Add page */}
-        <div className="mb-6">
+        {/* REPLACE IMAGE */}
+        <div className="space-y-2">
           <label htmlFor="featuredImage" className="block text-gray-700 font-medium">
             Replace Image (optional)
           </label>
@@ -144,12 +143,15 @@ export default function EditBlogPostPage({ params }) {
             id="featuredImage"
             name="featuredImage"
             onChange={handleChange}
-            className="text-gray-900 w-full p-2 border border-gray-300 rounded mt-1 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            className="w-full text-gray-900 border border-gray-300 rounded-lg p-2 
+                     file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 
+                     file:bg-gray-100 file:text-gray-800 hover:file:bg-gray-200 
+                     transition"
           />
         </div>
 
-        {/* TITLE Input - Consistent styling */}
-        <div className="mb-4">
+        {/* TITLE */}
+        <div className="space-y-2">
           <label htmlFor="title" className="block text-gray-700 font-medium">Title</label>
           <input
             type="text"
@@ -157,13 +159,14 @@ export default function EditBlogPostPage({ params }) {
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded mt-1 text-gray-900"
             required
+            className="w-full border border-gray-300 rounded-lg p-2 text-gray-900 
+                       focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
           />
         </div>
 
-        {/* AUTHOR Input - Consistent styling */}
-        <div className="mb-4">
+        {/* AUTHOR */}
+        <div className="space-y-2">
           <label htmlFor="author" className="block text-gray-700 font-medium">Author</label>
           <input
             type="text"
@@ -171,32 +174,36 @@ export default function EditBlogPostPage({ params }) {
             name="author"
             value={formData.author}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded mt-1 text-gray-900"
             required
+            className="w-full border border-gray-300 rounded-lg p-2 text-gray-900 
+                       focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
           />
         </div>
 
-        {/* CONTENT Textarea - Consistent styling */}
-        <div className="mb-6"> {/* Use mb-6 for the last element before the button, consistent with Add page */}
+        {/* CONTENT */}
+        <div className="space-y-2">
           <label htmlFor="content" className="block text-gray-700 font-medium">Content</label>
           <textarea
             id="content"
             name="content"
+            rows={10}
             value={formData.content}
             onChange={handleChange}
-            rows="10" // Reduced rows from 12 to 10 for consistency
-            className="w-full p-2 border border-gray-300 rounded mt-1 text-gray-900"
             required
+            className="w-full border border-gray-300 rounded-lg p-3 text-gray-900 
+                       focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
           />
         </div>
 
-        {/* Submit Button - Consistent styling but kept 'Update Post' text */}
+        {/* SUBMIT */}
         <button
           type="submit"
           disabled={submitting}
-          className="w-full bg-green-600 text-white p-3 rounded font-semibold hover:bg-green-700 transition disabled:bg-gray-400"
+          className="w-full py-3 rounded-lg font-semibold text-white 
+                     bg-blue-600 hover:bg-blue-700 transition 
+                     disabled:bg-gray-400"
         >
-          {submitting ? 'Updating...' : 'Update Post'}
+          {submitting ? 'Updating…' : 'Update Post'}
         </button>
       </form>
     </div>
